@@ -13,7 +13,7 @@ fun CalendarNavigation() {
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = CalendarScreens.SplashScreen.name){
+    NavHost(navController = navController, startDestination = CalendarScreens.HomeScreen.name){
 
         composable(route = CalendarScreens.SplashScreen.name){
             SplashScreen(navController = navController)
