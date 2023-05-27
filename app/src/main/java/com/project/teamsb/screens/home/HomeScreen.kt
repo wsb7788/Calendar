@@ -31,7 +31,6 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
 
     val date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM"))
 
-
     Scaffold(
         modifier = Modifier,
         topBar = {
@@ -40,11 +39,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
             }
         },
         floatingActionButton = {
-            FABContent() {
-                Log.d("TAG", "HomeScreen: ${viewModel.currentUser.toString()}")
-            }
+            FABContent(navController)
         }
     ) { paddingValues ->
+
 
 
         Column(modifier = Modifier

@@ -19,6 +19,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.project.teamsb.R
 import com.project.teamsb.navigation.CalendarScreens
 import kotlinx.coroutines.delay
@@ -35,7 +37,11 @@ fun SplashScreen(navController: NavController) {
         editable.value = false
         delay(800)
 
-        navController.navigate(CalendarScreens.LoginScreen.name)
+        if(Firebase.auth.currentUser != null){
+            navController.navigate(CalendarScreens.HomeScreen.name)
+        }else{
+            navController.navigate(CalendarScreens.LoginScreen.name)
+        }
 
     }
 

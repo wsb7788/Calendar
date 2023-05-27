@@ -1,8 +1,19 @@
 package com.project.teamsb.components
 
 import android.content.res.Resources.Theme
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.VectorDrawable
+import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +31,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -32,10 +46,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.ImageBitmapConfig
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -47,6 +68,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.project.teamsb.R
 import com.project.teamsb.screens.home.HomeViewModel
 
@@ -205,15 +227,31 @@ fun Calendar(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewM
 }
 
 @Composable
-fun FABContent(onTab: () -> Unit) {
+fun FABContent(navController: NavController) {
+    val isExpended = remember {
+        mutableStateOf(false)
+    }
+
+    val transition = updateTransition(targetState = isExpended, label = "transition")
+
+    val rotate by transition.animateFloat(label = "rotate") {
+        if(it.value) 45f else 0f
+    }
+
+
     FloatingActionButton(
-        onClick = { onTab.invoke() },
+        onClick = {
+            isExpended.value = !isExpended.value
+            Log.d("TAG", "FABContent: ${isExpended.value}")
+        },
+        modifier = Modifier.rotate(rotate),
         shape = RoundedCornerShape(50.dp),
         containerColor = Color.Black
     ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = Color.White)
     }
 }
+
 
 @Composable
 fun ScheduleColumn(item: Int) {
