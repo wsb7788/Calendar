@@ -9,12 +9,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1caf60f1-390d-4ea8-be0a-daa6e073e768" name="Changes" comment="firebase login">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/model/Schedule.kt" afterDir="false" />
+    <list default="true" id="1caf60f1-390d-4ea8-be0a-daa6e073e768" name="Changes" comment="schedule dataclass create">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/repository/FireRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/add/AddScreen.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/components/Components.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/components/Components.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/SplashScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/SplashScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/navigation/CalendarNavigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/navigation/CalendarNavigation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/navigation/CalendarScreens.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/navigation/CalendarScreens.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/utils/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/utils/Utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,9 +41,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Enum" />
+        <option value="Kotlin Data Class" />
         <option value="Kotlin Class" />
         <option value="Kotlin File" />
-        <option value="Kotlin Data Class" />
       </list>
     </option>
   </component>
@@ -175,7 +180,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684867038835</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="schedule dataclass create">
+      <created>1685198163900</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685198163900</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -215,6 +227,7 @@
     <MESSAGE value="first commit&#10;gradle setting&#10;basic navigation setting" />
     <MESSAGE value="home screen basic" />
     <MESSAGE value="firebase login" />
-    <option name="LAST_COMMIT_MESSAGE" value="firebase login" />
+    <MESSAGE value="schedule dataclass create" />
+    <option name="LAST_COMMIT_MESSAGE" value="schedule dataclass create" />
   </component>
 </project>

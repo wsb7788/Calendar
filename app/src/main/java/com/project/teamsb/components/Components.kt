@@ -1,47 +1,51 @@
 package com.project.teamsb.components
 
-import android.content.res.Resources.Theme
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.VectorDrawable
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -53,13 +57,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.ImageBitmapConfig
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -71,6 +70,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.project.teamsb.R
 import com.project.teamsb.screens.home.HomeViewModel
+import java.time.LocalDateTime
 
 
 @Composable
@@ -179,6 +179,47 @@ fun PasswordVisibility(passwordVisibility: MutableState<Boolean>) {
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddAppBar(
+    modifier: Modifier = Modifier,
+    title: String = "일정 추가",
+    onBackClicked: () -> Unit,
+    onSaveClicked: () -> Unit
+) {
+    TopAppBar(
+        title = {
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(onClick = { onBackClicked.invoke() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "ArrowBack",
+                        )
+                    }
+                    Text(
+                        text = title,
+                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    )
+                    Box {}
+                }
+            }
+        },
+        actions = {
+            IconButton(onClick = { onSaveClicked.invoke() }) {
+                Icon(
+                    imageVector = Icons.Default.Create,
+                    contentDescription = "Logout",
+                )
+
+            }
+        },
+        colors = TopAppBarDefaults.largeTopAppBarColors(containerColor = Color.Transparent)
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -218,7 +259,7 @@ fun CalendarAppBar(modifier: Modifier = Modifier, title: String, onClicked: () -
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Calendar(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
+fun HorizontalCalendar(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
 
     HorizontalPager(pageCount = Int.MAX_VALUE, state = PagerState(10)) {
         Text(text = "page $it")
@@ -235,7 +276,7 @@ fun FABContent(navController: NavController) {
     val transition = updateTransition(targetState = isExpended, label = "transition")
 
     val rotate by transition.animateFloat(label = "rotate") {
-        if(it.value) 45f else 0f
+        if (it.value) 45f else 0f
     }
 
 
@@ -255,5 +296,131 @@ fun FABContent(navController: NavController) {
 
 @Composable
 fun ScheduleColumn(item: Int) {
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddScheduleForm(
+    title: MutableState<String>,
+    isAllDay: MutableState<Boolean>,
+    startTime: MutableState<LocalDateTime>,
+    endTime: MutableState<LocalDateTime>,
+    alert: MutableState<Boolean>,
+    description: MutableState<String>
+) {
+
+    Column() {
+
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = title.value,
+            onValueChange = { title.value = it },
+            singleLine = true,
+            placeholder = { Text(text = "일정을 입력하세요.") },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+        Divider(
+            modifier = Modifier.padding(vertical = 10.dp),
+            thickness = 1.dp,
+            color = Color.LightGray
+        )
+        Column(modifier = Modifier.padding(horizontal = 15.dp)) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "종일")
+                Switch(
+                    checked = isAllDay.value,
+                    onCheckedChange = { isAllDay.value = it },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedBorderColor = Color.Black,
+                        checkedTrackColor = Color.Black,
+                        uncheckedThumbColor = Color.White,
+                        uncheckedBorderColor = Color.LightGray,
+                        uncheckedTrackColor = Color.LightGray
+                    )
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = startTime.value.toString())
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = startTime.value.toString())
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    modifier = Modifier.size(30.dp),
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = "Notification Icon"
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(text = "알림")
+                    Text(text = "없음")
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    modifier = Modifier.size(30.dp),
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = "Notification Icon"
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(text = "색")
+                    Row() {
+                        for (i in 1..3) {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 5.dp),
+                                imageVector = Icons.Default.AddCircle,
+                                contentDescription = "color"
+                            )
+                        }
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 150.dp),
+                value = description.value,
+                onValueChange = { description.value = it },
+                placeholder = {Text(text = "메모를 입력하세요.", color = Color.LightGray)},
+            )
+
+
+        }
+    }
 
 }

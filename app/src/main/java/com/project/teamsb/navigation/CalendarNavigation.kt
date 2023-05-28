@@ -7,13 +7,14 @@ import androidx.navigation.compose.rememberNavController
 import com.project.teamsb.screens.home.HomeScreen
 import com.project.teamsb.screens.login.LoginScreen
 import com.project.teamsb.screens.SplashScreen
+import com.project.teamsb.screens.add.AddScreen
 
 @Composable
 fun CalendarNavigation() {
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = CalendarScreens.SplashScreen.name){
+    NavHost(navController = navController, startDestination = CalendarScreens.AddScreen.name){
 
         composable(route = CalendarScreens.SplashScreen.name){
             SplashScreen(navController = navController)
@@ -25,6 +26,10 @@ fun CalendarNavigation() {
 
         composable(route = CalendarScreens.LoginScreen.name){
             LoginScreen(navController = navController)
+        }
+        
+        composable(route = CalendarScreens.AddScreen.name){
+            AddScreen(navController = navController)
         }
 
     }

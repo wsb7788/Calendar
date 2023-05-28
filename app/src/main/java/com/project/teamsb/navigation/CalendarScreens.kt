@@ -3,5 +3,6 @@ package com.project.teamsb.navigation
 enum class CalendarScreens {
     SplashScreen,
     LoginScreen,
-    HomeScreen
+    HomeScreen,
+    AddScreen
 }

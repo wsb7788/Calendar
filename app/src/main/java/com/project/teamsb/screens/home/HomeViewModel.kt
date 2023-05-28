@@ -9,6 +9,19 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(): ViewModel(){
 
     val currentUser = FirebaseAuth.getInstance().currentUser
+/*
+
+    val _schedule =
+
+
+    init{
+        getSchedule()
+    }
+
+    private fun getSchedule() {
+
+    }
+*/
 
 
 }
