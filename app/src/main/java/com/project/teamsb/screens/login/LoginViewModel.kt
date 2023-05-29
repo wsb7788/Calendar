@@ -10,7 +10,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.project.teamsb.model.FBUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +29,6 @@ class LoginViewModel @Inject constructor(): ViewModel() {
 
     fun signInWithEmailAndPassWord(email: String, password: String, home : () -> Unit) {
 
-        Log.d(TAG, "signInWithEmailAndPassWord: $email $password")
 
         viewModelScope.launch {
             try {
@@ -61,13 +62,15 @@ class LoginViewModel @Inject constructor(): ViewModel() {
                         .addOnCompleteListener { task ->
                             if(task.isSuccessful){
 
-                                val displayName = task.result?.user?.email?.split("@")?.get(0)
-                                createUser(displayName)
+                                createUser(email)
                                 home.invoke()
 
                             }else{
-                                
-                                Log.d("TAG", "createUserWithEmailAndPassword: ${task.result}")
+                                try{
+                                    throw task.exception!!
+                                } catch (e: FirebaseAuthException){
+                                    Log.d(TAG, "createUserWithEmailAndPassword: ${e.message}")
+                                }
                             }
                             _loading.value = false
                         }
@@ -75,12 +78,20 @@ class LoginViewModel @Inject constructor(): ViewModel() {
             }catch (e: Exception){
                 Log.d("TAG", "createUserWithEmailAndPassword: ${e.message}")
             }
-
         }
     }
 
-    private fun createUser(displayName: String?) {
+    private fun createUser(email: String) {
         val userId = auth.currentUser?.uid
+
+        val user = FBUser(
+            id = userId.toString(),
+            email = email,
+            nickname = email.split("@").first()
+        ).toMap()
+
+        FirebaseFirestore.getInstance().collection("user")
+            .add(user)
 
     }
 }

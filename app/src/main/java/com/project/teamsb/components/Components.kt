@@ -319,11 +319,10 @@ fun AddScheduleForm(
     endTime: MutableState<LocalDateTime>,
     alert: MutableState<Boolean>,
     description: MutableState<String>,
+    color: MutableState<Color>,
     navController: NavController
 ) {
-    val state = remember {
-        mutableStateOf(Color.Blue)
-    }
+
     val colorRow = arrayOf(Color.Blue, Color.Red, Color.Yellow)
     Column() {
 
@@ -461,11 +460,11 @@ fun AddScheduleForm(
                                 modifier = Modifier
                                     .size(20.dp)
                                     .clip(CircleShape)
-                                    .clickable { state.value = item }
+                                    .clickable { color.value = item }
                                     .background(item)
                                     .border(
-                                        width = if (state.value == item) 2.dp else 0.dp,
-                                        color = if (state.value == item) Color.Black else Color.Transparent,
+                                        width = if (color.value == item) 2.dp else 0.dp,
+                                        color = if (color.value == item) Color.Black else Color.Transparent,
                                         shape = CircleShape
                                     )
                             )

@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.project.teamsb.components.AddAppBar
 import com.project.teamsb.components.AddScheduleForm
@@ -25,8 +26,10 @@ fun AddScreen(navController: NavController) {
     val endTime = remember { mutableStateOf(LocalDateTime.now()) }
     val alert = remember { mutableStateOf(false) }
     val description = remember { mutableStateOf("") }
-
+    val color = remember{mutableStateOf(Color.Blue)}
     val isValid = remember(title.value) { title.value.trim().isNotEmpty() }
+
+
 
     Scaffold(
         topBar = {
@@ -52,6 +55,7 @@ fun AddScreen(navController: NavController) {
                 endTime = endTime,
                 alert = alert,
                 description = description,
+                color = color,
                 navController = navController
             )
         }
