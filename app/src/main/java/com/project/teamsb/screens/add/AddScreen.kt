@@ -51,7 +51,8 @@ fun AddScreen(navController: NavController) {
                 startTime = startTime,
                 endTime = endTime,
                 alert = alert,
-                description = description
+                description = description,
+                navController = navController
             )
         }
 

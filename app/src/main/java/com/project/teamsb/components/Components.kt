@@ -1,9 +1,14 @@
 package com.project.teamsb.components
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.util.Log
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,28 +21,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -53,10 +57,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -70,7 +77,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.project.teamsb.R
 import com.project.teamsb.screens.home.HomeViewModel
+import com.project.teamsb.utils.showDatePicker
+import com.project.teamsb.utils.showTimePicker
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -299,6 +309,7 @@ fun ScheduleColumn(item: Int) {
 
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScheduleForm(
@@ -307,9 +318,13 @@ fun AddScheduleForm(
     startTime: MutableState<LocalDateTime>,
     endTime: MutableState<LocalDateTime>,
     alert: MutableState<Boolean>,
-    description: MutableState<String>
+    description: MutableState<String>,
+    navController: NavController
 ) {
-
+    val state = remember {
+        mutableStateOf(Color.Blue)
+    }
+    val colorRow = arrayOf(Color.Blue, Color.Red, Color.Yellow)
     Column() {
 
         TextField(
@@ -358,8 +373,26 @@ fun AddScheduleForm(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = startTime.value.toString())
+                Text(
+                    text = startTime.value.format(DateTimeFormatter.ofPattern("M월 d일")),
+                    modifier = Modifier.clickable {
+                        showDatePicker(
+                            navController.context,
+                            startTime
+                        )
+                    })
+                if (isAllDay.value) {
+                    Text(
+                        text = startTime.value.format(DateTimeFormatter.ofPattern("hh:mm")),
+                        modifier = Modifier.clickable {
+                            showTimePicker(
+                                navController.context,
+                                startTime
+                            )
+                        })
+                }
             }
+
             Spacer(modifier = Modifier.height(10.dp))
 
             Row(
@@ -368,9 +401,30 @@ fun AddScheduleForm(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = startTime.value.toString())
+                Text(
+                    text = endTime.value.format(DateTimeFormatter.ofPattern("M월 d일")),
+                    modifier = Modifier.clickable {
+                        showDatePicker(
+                            navController.context,
+                            endTime
+                        )
+                    })
+                if (isAllDay.value) {
+                    Text(
+                        text = endTime.value.format(DateTimeFormatter.ofPattern("hh:mm")),
+                        modifier = Modifier.clickable {
+                            showTimePicker(
+                                navController.context,
+                                endTime
+                            )
+                        })
+                }
             }
+
+
             Spacer(modifier = Modifier.height(10.dp))
+
+
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -399,28 +453,44 @@ fun AddScheduleForm(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(text = "색")
-                    Row() {
-                        for (i in 1..3) {
-                            Icon(
-                                modifier = Modifier.padding(horizontal = 5.dp),
-                                imageVector = Icons.Default.AddCircle,
-                                contentDescription = "color"
+
+                    LazyRow() {
+                        items(colorRow) { item ->
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clip(CircleShape)
+                                    .clickable { state.value = item }
+                                    .background(item)
+                                    .border(
+                                        width = if (state.value == item) 2.dp else 0.dp,
+                                        color = if (state.value == item) Color.Black else Color.Transparent,
+                                        shape = CircleShape
+                                    )
                             )
+
                         }
+
                     }
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 150.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 150.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color.LightGray,
+                    unfocusedBorderColor = Color.LightGray
+                ),
                 value = description.value,
                 onValueChange = { description.value = it },
-                placeholder = {Text(text = "메모를 입력하세요.", color = Color.LightGray)},
+                placeholder = { Text(text = "메모를 입력하세요.", color = Color.LightGray) },
             )
-
-
         }
-    }
 
+
+    }
 }
