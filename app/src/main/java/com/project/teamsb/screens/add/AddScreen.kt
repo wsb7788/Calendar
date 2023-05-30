@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.project.teamsb.components.AddAppBar
 import com.project.teamsb.components.AddScheduleForm
@@ -18,7 +19,7 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddScreen(navController: NavController) {
+fun AddScreen(navController: NavController, viewModel: AddScreenViewModel = hiltViewModel()) {
 
     val title = remember { mutableStateOf("") }
     val isAllDay = remember { mutableStateOf(false) }
@@ -39,6 +40,9 @@ fun AddScreen(navController: NavController) {
                 onSaveClicked = {
                     if (isValid) {
                         Log.d("TAG", "AddScreen: title = ${title.value}, isallday = ${isAllDay.value}, desc = ${description.value}")
+                        viewModel.saveSchedule(title.value, isAllDay.value, startTime.value, endTime.value, alert.value, description.value, color.value){
+                            navController.popBackStack()
+                        }
                         //저장하기!
                     } else {
                         showMessage(context = navController.context, text = "asd")

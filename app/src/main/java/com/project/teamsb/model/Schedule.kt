@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import java.time.LocalDateTime
 
 data class Schedule(
-    val name: String,
+    val title: String,
     val isImportant: Boolean,
     val isAllDay: Boolean,
     val alert: Boolean,

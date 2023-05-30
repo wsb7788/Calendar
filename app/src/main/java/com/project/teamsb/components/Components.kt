@@ -380,7 +380,7 @@ fun AddScheduleForm(
                             startTime
                         )
                     })
-                if (isAllDay.value) {
+                if (!isAllDay.value) {
                     Text(
                         text = startTime.value.format(DateTimeFormatter.ofPattern("hh:mm")),
                         modifier = Modifier.clickable {
@@ -408,7 +408,7 @@ fun AddScheduleForm(
                             endTime
                         )
                     })
-                if (isAllDay.value) {
+                if (!isAllDay.value) {
                     Text(
                         text = endTime.value.format(DateTimeFormatter.ofPattern("hh:mm")),
                         modifier = Modifier.clickable {
