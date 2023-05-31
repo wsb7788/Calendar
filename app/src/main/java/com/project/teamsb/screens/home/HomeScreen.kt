@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import com.project.teamsb.components.CalendarAppBar
 import com.project.teamsb.components.FABContent
 import com.project.teamsb.components.HorizontalCalendar
+import com.project.teamsb.model.Schedule
 import com.project.teamsb.navigation.CalendarScreens
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -24,9 +26,12 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
 
 
     val date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM"))
-    //현재 날짜
-    //이벤트 목록
+    var listOfSchedules= emptyList<Schedule>()
 
+    if(viewModel.data.value.isNotEmpty()){
+        listOfSchedules = viewModel.data.value
+        Log.d("TAG", "HomeScreen: $listOfSchedules")
+    }
 
     Scaffold(
         modifier = Modifier,

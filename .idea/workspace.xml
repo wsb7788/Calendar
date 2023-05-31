@@ -9,12 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1caf60f1-390d-4ea8-be0a-daa6e073e768" name="Changes" comment="store user info in firestore database">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/model/FBSchedule.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/add/AddScreenViewModel.kt" afterDir="false" />
+    <list default="true" id="1caf60f1-390d-4ea8-be0a-daa6e073e768" name="Changes" comment="store schedule in firestore database">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/di/AppModule.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/components/Components.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/components/Components.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/model/Schedule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/model/Schedule.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/add/AddScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/add/AddScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/repository/FireRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/repository/FireRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/project/teamsb/screens/home/HomeViewModel.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +41,8 @@
         <option value="Kotlin Class" />
         <option value="Kotlin Data Class" />
         <option value="Kotlin File" />
+        <option value="Kotlin Object" />
+        <option value="Kotlin Interface" />
       </list>
     </option>
   </component>
@@ -59,18 +63,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "cidr.known.project.marker": "true",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "last_opened_file_path": "C:/Users/WON/Desktop/JetAReader-main",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/WON/Desktop/JetAReader-main&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\WON\AndroidStudioProjects\Calendar\app\src\main\java\com\project\teamsb\screens" />
@@ -206,7 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685383296494</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="store schedule in firestore database">
+      <created>1685467915845</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685467915845</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -250,6 +261,7 @@
     <MESSAGE value="addSchedule screen basic ui" />
     <MESSAGE value="addSchedule screen date &amp; time Picker" />
     <MESSAGE value="store user info in firestore database" />
-    <option name="LAST_COMMIT_MESSAGE" value="store user info in firestore database" />
+    <MESSAGE value="store schedule in firestore database" />
+    <option name="LAST_COMMIT_MESSAGE" value="store schedule in firestore database" />
   </component>
 </project>
