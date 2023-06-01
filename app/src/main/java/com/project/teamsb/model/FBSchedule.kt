@@ -2,6 +2,7 @@ package com.project.teamsb.model
 
 import androidx.compose.ui.graphics.Color
 import com.google.firebase.Timestamp
+import com.project.teamsb.data.CalendarDateTime
 import java.sql.Time
 import java.time.LocalDateTime
 
@@ -11,8 +12,8 @@ data class FBSchedule(
     val isImportant: Boolean,
     val isAllDay: Boolean,
     val alert: Boolean,
-    val start: String,
-    val end: String,
+    val start: CalendarDateTime,
+    val end: CalendarDateTime,
     val description: String,
     val color: Int,
 ){

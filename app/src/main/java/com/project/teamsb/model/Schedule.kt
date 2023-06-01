@@ -2,6 +2,7 @@ package com.project.teamsb.model
 
 import androidx.compose.ui.graphics.Color
 import com.google.firebase.firestore.PropertyName
+import com.project.teamsb.data.CalendarDateTime
 import java.time.LocalDateTime
 
 data class Schedule(
@@ -16,8 +17,8 @@ data class Schedule(
     @set: PropertyName("is_all_day")
     var isAllDay: Boolean? = null,
     var alert: Boolean? = null,
-    var start: String? = null,
-    var end: String? = null,
+    var start: CalendarDateTime? = null,
+    var end: CalendarDateTime? = null,
     var description: String? = null,
     var color: Int? = null,
 )

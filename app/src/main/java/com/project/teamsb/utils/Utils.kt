@@ -5,35 +5,38 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.platform.LocalContext
+import com.project.teamsb.data.CalendarDateTime
+import kotlinx.datetime.Month
 import java.time.LocalDateTime
+import kotlin.math.absoluteValue
 
 fun showMessage(context: Context, text: String){
     Toast.makeText(context, text, Toast.LENGTH_LONG).show()
 }
 
-fun showDatePicker(context: Context, startTime: MutableState<LocalDateTime>){
+fun showDatePicker(context: Context, time: CalendarDateTime) {
     DatePickerDialog(
         context,
         DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-            startTime.value = startTime.value.withYear(year)
-            startTime.value = startTime.value.withMonth(month)
-            startTime.value = startTime.value.withDayOfMonth(dayOfMonth)
+            time.year = year
+            time.month = Month(month)
+            time.dayOfMonth = dayOfMonth
         },
-        startTime.value.year,
-        startTime.value.monthValue,
-        startTime.value.dayOfMonth
+        time.year,
+        time.month.value,
+        time.dayOfMonth
     ).show()
 }
-fun showTimePicker(context: Context, startTime: MutableState<LocalDateTime>){
+fun showTimePicker(context: Context, time: CalendarDateTime){
     TimePickerDialog(
         context,
         TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-            startTime.value = startTime.value.withHour(hourOfDay)
-            startTime.value = startTime.value.withMinute(minute)
+            time.hour = hourOfDay
+            time.minute = minute
         },
-        startTime.value.hour,
-        startTime.value.minute,
+        time.hour,
+        time.minute,
         false
     ).show()
 }
+

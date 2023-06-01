@@ -14,8 +14,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.project.teamsb.components.AddAppBar
 import com.project.teamsb.components.AddScheduleForm
+import com.project.teamsb.data.CalendarDateTime
 import com.project.teamsb.utils.showMessage
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,8 +23,8 @@ fun AddScreen(navController: NavController, viewModel: AddScreenViewModel = hilt
 
     val title = remember { mutableStateOf("") }
     val isAllDay = remember { mutableStateOf(false) }
-    val startTime = remember { mutableStateOf(LocalDateTime.now()) }
-    val endTime = remember { mutableStateOf(LocalDateTime.now()) }
+    val startTime = remember { CalendarDateTime() }
+    val endTime = remember { CalendarDateTime() }
     val alert = remember { mutableStateOf(false) }
     val description = remember { mutableStateOf("") }
     val color = remember{mutableStateOf(Color.Blue)}
@@ -40,7 +40,7 @@ fun AddScreen(navController: NavController, viewModel: AddScreenViewModel = hilt
                 onSaveClicked = {
                     if (isValid) {
                         Log.d("TAG", "AddScreen: title = ${title.value}, isallday = ${isAllDay.value}, desc = ${description.value}")
-                        viewModel.saveSchedule(title.value, isAllDay.value, startTime.value, endTime.value, alert.value, description.value, color.value){
+                        viewModel.saveSchedule(title.value, isAllDay.value, startTime, endTime, alert.value, description.value, color.value){
                             navController.popBackStack()
                         }
                         //저장하기!
