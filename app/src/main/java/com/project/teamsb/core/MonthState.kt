@@ -9,7 +9,7 @@ data class MonthState(
     val year: Int,
     val month: Month
 ) : ClosedRange<CalendarDateTime> {
-    private val firstDateOfMonth = CalendarDateTime(year, month, 1, 1, 1)
+    val firstDateOfMonth = CalendarDateTime(year, month, 1, 1, 1)
 
     override val start: CalendarDateTime = firstDateOfMonth.minus(
         value = firstDateOfMonth.dayOfWeek.christValue,

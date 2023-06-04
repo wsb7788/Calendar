@@ -17,9 +17,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -275,12 +278,11 @@ fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Sched
 
 
     HorizontalPager(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().background(Color.Cyan),
         pageCount = Int.MAX_VALUE,
         state = calendarState.pagerState
     ) { page ->
-        Column() {
-
+        Column(modifier = Modifier.fillMaxHeight()) {
             val monthState = remember {
                 MonthState(
                     year = page / 12 + 1,
@@ -305,8 +307,11 @@ fun Month(
     monthState: MonthState,
     filteredMonthSchedule: List<Schedule>
 ) {
-    Column(modifier = Modifier.padding(top = 10.dp)) {
-        repeat(6) { week ->
+    Column(modifier = Modifier.padding(top = 10.dp).background(Color.Gray)) {
+        val repeatWeek = remember(monthState){
+            if(monthState.firstDateOfMonth.dayOfWeek == DayOfWeek.SATURDAY) 6 else 5
+        }
+        repeat(repeatWeek) { week ->
             val weekState = remember {
                 WeekState(
                     monthState = monthState,
@@ -316,7 +321,7 @@ fun Month(
 
             Week(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth().fillMaxHeight(1f/repeatWeek.toFloat()).weight(1f),
                 weekState = weekState,
                 filteredMonthSchedule = filteredMonthSchedule
             )
@@ -331,7 +336,7 @@ fun Month(
 
 @Composable
 fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<Schedule>) {
-    Row() {
+    Row(modifier = modifier) {
         repeat(7) {
             val dateState = remember {
                 DateState(
@@ -340,7 +345,7 @@ fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<S
                 )
             }
             Date(
-                modifier = Modifier.weight(1f),
+                modifier= Modifier.weight(1f).fillMaxHeight(),
                 dayOfMonth = dateState.date.dayOfMonth,
                 dayOfWeek = dateState.date.dayOfWeek,
                 isSameMonth = dateState.isSameMonth,
@@ -361,19 +366,21 @@ fun Date(
     filteredMonthSchedule: List<Schedule>
 ) {
 
-    Column(modifier = modifier.defaultMinSize(minHeight = 80.dp)) {
+    Column(modifier = modifier.background(color = Color.Blue)) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().background(color = Color.Green),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if(isSameMonth){
-
                 Text(text = dayOfMonth.toString())
             }else{
                 Text(text = dayOfMonth.toString(), color= Color.LightGray)
             }
+
         }
+        Text(text = dayOfMonth.toString())
+        Text(text = dayOfMonth.toString())
     }
 
 }
@@ -381,7 +388,7 @@ fun Date(
 
 @Composable
 fun MonthHeader() {
-    Row() {
+    Row(Modifier.wrapContentHeight()) {
         repeat(7) {
             WeekDay(modifier = Modifier.weight(1F), dayOfWeek = it.toDayOfWeek())
         }
@@ -436,7 +443,10 @@ fun FABContent(navController: NavController) {
 
 @Composable
 fun ScheduleColumn(item: Int) {
+    Column() {
+        Text("asdasd")
 
+    }
 }
 
 
