@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -67,16 +66,23 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.project.teamsb.R
 import com.project.teamsb.core.CalendarState
+import com.project.teamsb.core.DateState
+import com.project.teamsb.core.MonthState
+import com.project.teamsb.core.WeekState
 import com.project.teamsb.data.CalendarDateTime
 import com.project.teamsb.model.Schedule
 import com.project.teamsb.utils.showDatePicker
 import com.project.teamsb.utils.showTimePicker
+import com.project.teamsb.utils.toDayOfWeek
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
+import java.util.Locale
 
 
 @Composable
@@ -265,18 +271,140 @@ fun CalendarAppBar(modifier: Modifier = Modifier, title: String, onClicked: () -
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalCalendar(state: CalendarState, listOfSchedules: List<Schedule>) {
-
+fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Schedule>) {
 
 
     HorizontalPager(
         modifier = Modifier.fillMaxWidth(),
         pageCount = Int.MAX_VALUE,
-        state = PagerState(10)
-    ) {
+        state = calendarState.pagerState
+    ) { page ->
+        Column() {
+
+            val monthState = remember {
+                MonthState(
+                    year = page / 12 + 1,
+                    month = Month.of(page % 12 + 1)
+                )
+            }
+            val filteredMonthSchedule = remember(monthState) {
+                listOfSchedules.filter { monthState.month == it.start?.month }
+            }
+
+            MonthHeader()
+
+            Month(monthState = monthState, filteredMonthSchedule = filteredMonthSchedule)
+
+        }
+    }
+
+}
+
+@Composable
+fun Month(
+    monthState: MonthState,
+    filteredMonthSchedule: List<Schedule>
+) {
+    Column(modifier = Modifier.padding(top = 10.dp)) {
+        repeat(6) { week ->
+            val weekState = remember {
+                WeekState(
+                    monthState = monthState,
+                    weekOfMonth = week
+                )
+            }
+
+            Week(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                weekState = weekState,
+                filteredMonthSchedule = filteredMonthSchedule
+            )
+
+
+        }
 
     }
 
+
+}
+
+@Composable
+fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<Schedule>) {
+    Row() {
+        repeat(7) {
+            val dateState = remember {
+                DateState(
+                    weekState = weekState,
+                    dayOfWeek = it.toDayOfWeek()
+                )
+            }
+            Date(
+                modifier = Modifier.weight(1f),
+                dayOfMonth = dateState.date.dayOfMonth,
+                dayOfWeek = dateState.date.dayOfWeek,
+                isSameMonth = dateState.isSameMonth,
+                filteredMonthSchedule = filteredMonthSchedule
+            )
+        }
+    }
+
+
+}
+
+@Composable
+fun Date(
+    modifier: Modifier,
+    dayOfMonth: Int,
+    dayOfWeek: DayOfWeek,
+    isSameMonth: Boolean,
+    filteredMonthSchedule: List<Schedule>
+) {
+
+    Column(modifier = modifier.defaultMinSize(minHeight = 80.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if(isSameMonth){
+
+                Text(text = dayOfMonth.toString())
+            }else{
+                Text(text = dayOfMonth.toString(), color= Color.LightGray)
+            }
+        }
+    }
+
+}
+
+
+@Composable
+fun MonthHeader() {
+    Row() {
+        repeat(7) {
+            WeekDay(modifier = Modifier.weight(1F), dayOfWeek = it.toDayOfWeek())
+        }
+    }
+}
+
+@Composable
+fun WeekDay(modifier: Modifier, dayOfWeek: DayOfWeek) {
+    Text(
+        modifier = modifier,
+        text = remember {
+            dayOfWeek.getDisplayName(
+                java.time.format.TextStyle.NARROW_STANDALONE,
+                Locale.getDefault()
+            )
+        },
+        color = when (dayOfWeek) {
+            DayOfWeek.SUNDAY -> Color.Red
+            DayOfWeek.SATURDAY -> Color.Blue
+            else -> Color.Black
+        },
+        textAlign = TextAlign.Center
+    )
 }
 
 @Composable

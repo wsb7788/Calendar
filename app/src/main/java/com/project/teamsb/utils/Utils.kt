@@ -6,6 +6,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import com.project.teamsb.data.CalendarDateTime
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
 import java.time.LocalDateTime
 import kotlin.math.absoluteValue
@@ -39,4 +40,14 @@ fun showTimePicker(context: Context, time: CalendarDateTime){
         false
     ).show()
 }
+
+fun Int.toDayOfWeek(): DayOfWeek{
+
+    return when(this) {
+        0 ->DayOfWeek.SUNDAY
+        else -> java.time.DayOfWeek.of(this)
+    }
+}
+
+public val DayOfWeek.christValue: Int get() = value % 7
 

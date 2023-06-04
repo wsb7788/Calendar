@@ -1,12 +1,20 @@
 package com.project.teamsb.data
 
 import com.google.gson.JsonObject
+import com.google.type.DateTime
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toLocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 public data class CalendarDateTime(
@@ -42,6 +50,36 @@ public data class CalendarDateTime(
         minute = minute
     )
 
+    public fun toLocalDate(): LocalDate = LocalDate(
+        year = year,
+        month = month,
+        dayOfMonth = dayOfMonth,
+    )
+
+    public fun toDateTime(): LocalTime = LocalTime(
+        hour = hour,
+        minute = minute
+    )
+
+    public fun plus(value: Int, unit: DateTimeUnit.DateBased): CalendarDateTime = CalendarDateTime(
+        LocalDateTime(
+            toLocalDate().plus(
+                value = value,
+                unit = unit
+            ),
+            toDateTime()
+        )
+    )
+
+    public fun minus(value: Int, unit: DateTimeUnit.DateBased): CalendarDateTime = CalendarDateTime(
+        LocalDateTime(
+            toLocalDate().minus(
+                value = value,
+                unit = unit
+            ),
+            toDateTime()
+        )
+    )
 
 
     override fun compareTo(other: CalendarDateTime): Int = when {

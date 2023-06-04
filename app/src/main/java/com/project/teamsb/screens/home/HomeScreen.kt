@@ -33,10 +33,10 @@ import java.util.Locale
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltViewModel()) {
 
 
-    val state = rememberCalendarState()
-    val title = remember(state.year, state.month){
+    val calendarState = rememberCalendarState()
+    val title = remember(calendarState.year, calendarState.month){
         val format = SimpleDateFormat("yyyy.MM", Locale.getDefault())
-        val instant = LocalDate(state.year, state.month, 1).atStartOfDayIn(TimeZone.currentSystemDefault())
+        val instant = LocalDate(calendarState.year, calendarState.month, 1).atStartOfDayIn(TimeZone.currentSystemDefault())
         format.format(Date.from(instant.toJavaInstant()))
     }
 
@@ -44,6 +44,11 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
     if(viewModel.data.value.isNotEmpty()){
         listOfSchedules = viewModel.data.value
         Log.d("TAG", "HomeScreen: $listOfSchedules")
+    }
+
+    val todayList = remember(calendarState){
+        listOfSchedules.filter { it.start?.month == calendarState.month }
+        //todo 날짜 선택했을 때 필터 추가
     }
 
     Scaffold(
@@ -59,7 +64,9 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
     ) { paddingValues ->
 
         Column(modifier = Modifier.padding(paddingValues = paddingValues)){
-            HorizontalCalendar(state, listOfSchedules)
+
+            HorizontalCalendar(calendarState, listOfSchedules)
+
             MaterialTheme.typography.bodyLarge
 
             Divider()
