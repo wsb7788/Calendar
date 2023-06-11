@@ -17,9 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -274,7 +272,7 @@ fun CalendarAppBar(modifier: Modifier = Modifier, title: String, onClicked: () -
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Schedule>) {
+fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Schedule>, onDayClick: (CalendarDateTime) -> Unit) {
 
 
     HorizontalPager(
@@ -295,7 +293,10 @@ fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Sched
 
             MonthHeader()
 
-            Month(monthState = monthState, filteredMonthSchedule = filteredMonthSchedule)
+            Month(monthState = monthState, filteredMonthSchedule = filteredMonthSchedule){
+                onDayClick(it)
+            }
+
 
         }
     }
@@ -305,7 +306,8 @@ fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Sched
 @Composable
 fun Month(
     monthState: MonthState,
-    filteredMonthSchedule: List<Schedule>
+    filteredMonthSchedule: List<Schedule>,
+    onDayClick: (CalendarDateTime) -> Unit
 ) {
     Column(modifier = Modifier.padding(top = 10.dp).background(Color.Gray)) {
         val repeatWeek = remember(monthState){
@@ -324,7 +326,10 @@ fun Month(
                     .fillMaxWidth().fillMaxHeight(1f/repeatWeek.toFloat()).weight(1f),
                 weekState = weekState,
                 filteredMonthSchedule = filteredMonthSchedule
-            )
+            ){
+                onDayClick(it)
+            }
+
 
 
         }
@@ -335,7 +340,7 @@ fun Month(
 }
 
 @Composable
-fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<Schedule>) {
+fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<Schedule>, onDayClick: (CalendarDateTime) -> Unit) {
     Row(modifier = modifier) {
         repeat(7) {
             val dateState = remember {
@@ -350,7 +355,9 @@ fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<S
                 dayOfWeek = dateState.date.dayOfWeek,
                 isSameMonth = dateState.isSameMonth,
                 filteredMonthSchedule = filteredMonthSchedule
-            )
+            ){
+                onDayClick(dateState.date)
+            }
         }
     }
 
@@ -363,10 +370,11 @@ fun Date(
     dayOfMonth: Int,
     dayOfWeek: DayOfWeek,
     isSameMonth: Boolean,
-    filteredMonthSchedule: List<Schedule>
+    filteredMonthSchedule: List<Schedule>,
+    onClicked:() -> Unit
 ) {
 
-    Column(modifier = modifier.background(color = Color.Blue)) {
+    Column(modifier = modifier.background(color = Color.Blue).clickable { onClicked() }) {
         Row(
             modifier = Modifier.fillMaxWidth().background(color = Color.Green),
             horizontalArrangement = Arrangement.Center,
@@ -442,7 +450,7 @@ fun FABContent(navController: NavController) {
 
 
 @Composable
-fun ScheduleColumn(item: Int) {
+fun ScheduleColumn(item: Schedule) {
     Column() {
         Text("asdasd")
 

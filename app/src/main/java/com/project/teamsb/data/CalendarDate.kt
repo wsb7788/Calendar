@@ -1,7 +1,5 @@
 package com.project.teamsb.data
 
-import com.google.gson.JsonObject
-import com.google.type.DateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -12,9 +10,8 @@ import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toLocalDateTime
-import java.time.format.DateTimeFormatter
+import kotlin.reflect.KProperty
 
 
 public data class CalendarDateTime(
@@ -41,6 +38,13 @@ public data class CalendarDateTime(
     public fun toMonthAndDayString() = "${month.value}월 ${dayOfMonth}일"
     public fun toHourAndMinuteString() = "${hour}:${minute}"
 
+    public fun setDateTime(dateTime: CalendarDateTime){
+        year = dateTime.year
+        month = dateTime.month
+        dayOfMonth = dateTime.dayOfMonth
+        hour = dateTime.hour
+        minute = dateTime.minute
+    }
 
     public fun toLocalDateTime(): LocalDateTime = LocalDateTime(
         year = year,
@@ -85,8 +89,10 @@ public data class CalendarDateTime(
     override fun compareTo(other: CalendarDateTime): Int = when {
         year != other.year -> compareValues(year, other.year)
         month != other.month -> compareValues(month, other.month)
-        hour != other.hour -> compareValues(hour, other.hour)
-        minute != other.minute -> compareValues(minute, other.minute)
+        dayOfMonth != other.dayOfMonth -> compareValues(dayOfMonth, other.dayOfMonth)
         else -> compareValues(dayOfMonth, other.dayOfMonth)
     }
+
+
+
 }

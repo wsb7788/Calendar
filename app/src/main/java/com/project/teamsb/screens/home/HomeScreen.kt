@@ -2,6 +2,7 @@ package com.project.teamsb.screens.home
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import com.project.teamsb.components.FABContent
 import com.project.teamsb.components.HorizontalCalendar
 import com.project.teamsb.components.ScheduleColumn
 import com.project.teamsb.core.rememberCalendarState
+import com.project.teamsb.data.CalendarDateTime
 import com.project.teamsb.model.Schedule
 import com.project.teamsb.navigation.CalendarScreens
 import kotlinx.datetime.LocalDate
@@ -31,6 +33,7 @@ import kotlinx.datetime.toJavaInstant
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.runtime.mutableStateOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,11 +52,15 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
         listOfSchedules = viewModel.data.value
         Log.d("TAG", "HomeScreen: $listOfSchedules")
     }
-
-    val todayList = remember(calendarState){
-        listOfSchedules.filter { it.start?.month == calendarState.month }
-        //todo 날짜 선택했을 때 필터 추가
+    val clickState = remember {
+        mutableStateOf(CalendarDateTime())
     }
+
+    val selectedDayList = remember(clickState.value.year, clickState.value.month, clickState.value.dayOfMonth){
+        println(clickState)
+        listOfSchedules.filter { it.start?.month == clickState.value.month && it.start?.dayOfMonth == clickState.value.dayOfMonth }
+    }
+
 
     Scaffold(
         modifier = Modifier,
@@ -72,24 +79,31 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
             .background(color = androidx.compose.ui.graphics.Color.Red)
             .fillMaxHeight()){
 
-            Surface(modifier = Modifier.fillMaxHeight().weight(2f)) {
+            Surface(modifier = Modifier
+                .fillMaxHeight()
+                .weight(2f)) {
 
-                HorizontalCalendar(calendarState, listOfSchedules)
+                HorizontalCalendar(calendarState, listOfSchedules){
+                    clickState.value = it
+                }
             }
 
 
             Divider()
 
 
-            if(true){
+
+            if(listOfSchedules.isNotEmpty()){
                 LazyColumn(modifier = Modifier
                     .fillMaxWidth()
                     .background(color = androidx.compose.ui.graphics.Color.Yellow)
                     .weight(1f)){
-                    items(items = arrayOf(1,2,3)){ schedule ->
+                    items(items = selectedDayList){ schedule ->
                         ScheduleColumn(item = schedule)
                     }
                 }
+            }else{
+                Box{}
             }
         }
 
