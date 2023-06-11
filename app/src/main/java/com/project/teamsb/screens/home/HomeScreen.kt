@@ -83,9 +83,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                 .fillMaxHeight()
                 .weight(2f)) {
 
-                HorizontalCalendar(calendarState, listOfSchedules){
-                    clickState.value = it
-                }
+                HorizontalCalendar(calendarState, listOfSchedules, clickState)
             }
 
 
@@ -102,8 +100,6 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                         ScheduleColumn(item = schedule)
                     }
                 }
-            }else{
-                Box{}
             }
         }
 

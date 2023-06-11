@@ -38,14 +38,6 @@ public data class CalendarDateTime(
     public fun toMonthAndDayString() = "${month.value}월 ${dayOfMonth}일"
     public fun toHourAndMinuteString() = "${hour}:${minute}"
 
-    public fun setDateTime(dateTime: CalendarDateTime){
-        year = dateTime.year
-        month = dateTime.month
-        dayOfMonth = dateTime.dayOfMonth
-        hour = dateTime.hour
-        minute = dateTime.minute
-    }
-
     public fun toLocalDateTime(): LocalDateTime = LocalDateTime(
         year = year,
         month = month,
@@ -89,7 +81,6 @@ public data class CalendarDateTime(
     override fun compareTo(other: CalendarDateTime): Int = when {
         year != other.year -> compareValues(year, other.year)
         month != other.month -> compareValues(month, other.month)
-        dayOfMonth != other.dayOfMonth -> compareValues(dayOfMonth, other.dayOfMonth)
         else -> compareValues(dayOfMonth, other.dayOfMonth)
     }
 

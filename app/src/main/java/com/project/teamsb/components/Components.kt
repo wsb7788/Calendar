@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -60,6 +62,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -68,6 +71,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -272,11 +276,17 @@ fun CalendarAppBar(modifier: Modifier = Modifier, title: String, onClicked: () -
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Schedule>, onDayClick: (CalendarDateTime) -> Unit) {
+fun HorizontalCalendar(
+    calendarState: CalendarState,
+    listOfSchedules: List<Schedule>,
+    clickState: MutableState<CalendarDateTime>
+) {
 
 
     HorizontalPager(
-        modifier = Modifier.fillMaxWidth().background(Color.Cyan),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Cyan),
         pageCount = Int.MAX_VALUE,
         state = calendarState.pagerState
     ) { page ->
@@ -293,9 +303,11 @@ fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Sched
 
             MonthHeader()
 
-            Month(monthState = monthState, filteredMonthSchedule = filteredMonthSchedule){
-                onDayClick(it)
-            }
+            Month(
+                monthState = monthState,
+                filteredMonthSchedule = filteredMonthSchedule,
+                clickState
+            )
 
 
         }
@@ -307,11 +319,15 @@ fun HorizontalCalendar(calendarState: CalendarState, listOfSchedules: List<Sched
 fun Month(
     monthState: MonthState,
     filteredMonthSchedule: List<Schedule>,
-    onDayClick: (CalendarDateTime) -> Unit
+    clickState: MutableState<CalendarDateTime>
 ) {
-    Column(modifier = Modifier.padding(top = 10.dp).background(Color.Gray)) {
-        val repeatWeek = remember(monthState){
-            if(monthState.firstDateOfMonth.dayOfWeek == DayOfWeek.SATURDAY) 6 else 5
+    Column(
+        modifier = Modifier
+            .padding(top = 10.dp)
+            .background(Color.Gray)
+    ) {
+        val repeatWeek = remember(monthState) {
+            if (monthState.firstDateOfMonth.dayOfWeek == DayOfWeek.SATURDAY) 6 else 5
         }
         repeat(repeatWeek) { week ->
             val weekState = remember {
@@ -323,13 +339,13 @@ fun Month(
 
             Week(
                 modifier = Modifier
-                    .fillMaxWidth().fillMaxHeight(1f/repeatWeek.toFloat()).weight(1f),
+                    .fillMaxWidth()
+                    .fillMaxHeight(1f / repeatWeek.toFloat())
+                    .weight(1f),
                 weekState = weekState,
-                filteredMonthSchedule = filteredMonthSchedule
-            ){
-                onDayClick(it)
-            }
-
+                filteredMonthSchedule = filteredMonthSchedule,
+                clickState = clickState
+            )
 
 
         }
@@ -340,7 +356,12 @@ fun Month(
 }
 
 @Composable
-fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<Schedule>, onDayClick: (CalendarDateTime) -> Unit) {
+fun Week(
+    modifier: Modifier,
+    weekState: WeekState,
+    filteredMonthSchedule: List<Schedule>,
+    clickState: MutableState<CalendarDateTime>
+) {
     Row(modifier = modifier) {
         repeat(7) {
             val dateState = remember {
@@ -349,14 +370,21 @@ fun Week(modifier: Modifier, weekState: WeekState, filteredMonthSchedule: List<S
                     dayOfWeek = it.toDayOfWeek()
                 )
             }
+
+
             Date(
-                modifier= Modifier.weight(1f).fillMaxHeight(),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
                 dayOfMonth = dateState.date.dayOfMonth,
                 dayOfWeek = dateState.date.dayOfWeek,
                 isSameMonth = dateState.isSameMonth,
-                filteredMonthSchedule = filteredMonthSchedule
-            ){
-                onDayClick(dateState.date)
+                dateState = dateState,
+                filteredMonthSchedule = filteredMonthSchedule,
+                clickState = clickState,
+
+                ) {
+                clickState.value = dateState.date
             }
         }
     }
@@ -369,23 +397,69 @@ fun Date(
     modifier: Modifier,
     dayOfMonth: Int,
     dayOfWeek: DayOfWeek,
+    dateState: DateState,
     isSameMonth: Boolean,
     filteredMonthSchedule: List<Schedule>,
-    onClicked:() -> Unit
+    clickState: MutableState<CalendarDateTime>,
+    onClicked: () -> Unit
 ) {
 
-    Column(modifier = modifier.background(color = Color.Blue).clickable { onClicked() }) {
+    val isClickedDate = remember(clickState.value) {
+        clickState.value == dateState.date
+    }
+    val now = CalendarDateTime()
+    val isToday = dateState.date.year == now.year && dateState.date.month == now.month && dateState.date.dayOfMonth == now.dayOfMonth
+
+    Column(modifier = modifier
+        .background(color = Color.Blue)
+        .clickable { onClicked() }) {
         Row(
-            modifier = Modifier.fillMaxWidth().background(color = Color.Green),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.Green),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if(isSameMonth){
-                Text(text = dayOfMonth.toString())
-            }else{
-                Text(text = dayOfMonth.toString(), color= Color.LightGray)
+            Box(modifier = if (isClickedDate) {
+                Modifier.sizeIn(
+                    minWidth = with(LocalDensity.current) {
+                        (MaterialTheme.typography.bodyMedium.fontSize * 1.5).toDp()
+                    },
+                    minHeight = with(LocalDensity.current) {
+                        (MaterialTheme.typography.bodyMedium.fontSize * 1.5).toDp()
+                    },
+                ).background(color = Color.Black, shape = CircleShape)
+            } else if (isToday) {
+                Modifier.sizeIn(
+                    minWidth = with(LocalDensity.current) {
+                        (MaterialTheme.typography.bodyMedium.fontSize * 1.5).toDp()
+                    },
+                    minHeight = with(LocalDensity.current) {
+                        (MaterialTheme.typography.bodyMedium.fontSize * 1.5).toDp()
+                    },
+                ).background(color = Color.LightGray, shape = CircleShape)
+            } else {
+                Modifier.sizeIn(
+                    minWidth = with(LocalDensity.current) {
+                        (MaterialTheme.typography.bodyMedium.fontSize * 1.5).toDp()
+                    },
+                    minHeight = with(LocalDensity.current) {
+                        (MaterialTheme.typography.bodyMedium.fontSize * 1.5).toDp()
+                    },
+                )
+            },contentAlignment = Alignment.Center){
+                Text(
+                    color = when {
+                        isClickedDate || isToday -> Color.White
+                        dayOfWeek == DayOfWeek.SATURDAY -> Color.Blue
+                        dayOfWeek == DayOfWeek.SUNDAY -> Color.Red
+                        else -> Color.Black
+                    }.copy(alpha = if (isSameMonth) 1f else 0.5f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = dayOfMonth.toString(),
+                    textAlign = TextAlign.Center
+                )
             }
-
         }
         Text(text = dayOfMonth.toString())
         Text(text = dayOfMonth.toString())
